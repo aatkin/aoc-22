@@ -8,12 +8,11 @@
   (->> (str/split-lines dada)
        (map #(str/split % #" "))))
 
-;; return map {S -> [win(S) draw(S) lose(S)]}
-(def outcomes (->> (take 3 (partition 3 2 (cycle ["Y" "X" "Z"])))
-                   (interleave ["A" "B" "C"])
-                   (partition 2)
-                   (mapv vec)
-                   (into {})))
+;; {S -> [win(S) draw(S) lose(S)]}
+(def outcomes {"A" ["Y" "X" "Z"]
+               "B" ["Z" "Y" "X"]
+               "C" ["X" "Z" "Y"]})
+
 (defn shape-score [s]
   (case s
     ("A" "X") 1 ; rock
