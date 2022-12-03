@@ -24,20 +24,21 @@
        "\n(def part-1-solution nil)"
        "\n(def part-2-solution nil)"))
 
+(defn create-file [path]
+  (when-not (fs/exists? (fs/file path))
+    (fs/create-file path)))
+
 (defn create-clj-template [day-n]
   (spit (fs/file "src" "aoc_22" (str "day_" day-n ".clj"))
         (clj-template day-n))
   (println "created" (str "src/aoc_22/day_" day-n ".clj")))
 
-(defn create-file-if-not-exists [s]
-  (when-not (fs/exists? s)
-    (fs/create-file s)
-    (println "created" s)))
-
 (if (nil? day-n)
   (println "provide day as integer: bb scaffold.clj 1")
   (do
-    (create-file-if-not-exists (str "resources/input/day_" day-n))
-    (create-file-if-not-exists (str "resources/mock_input/day_" day-n))
+    (fs/create-dirs "resources/mock_input")
+    (fs/create-dirs "resources/input")
+    (create-file (str "resources/mock_input/day_" day-n))
+    (create-file (str "resources/input/day_" day-n))
     (create-clj-template day-n)))
 
