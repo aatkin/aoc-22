@@ -6,23 +6,17 @@
 (def ^:private mock-input (slurp "resources/mock_input/day_3"))
 
 (defn parse [dada] (str/split-lines dada))
-(def priority (-> ((juxt identity str/upper-case) "abcdefghijklmnopqrstuvwxyz")
-                    str/join
-                    (zipmap (map inc (range)))))
-(defn common-item-priority [& rs]
-  (->> (map set rs)
-       (apply clojure.set/intersection)
-       first
-       (get priority)))
+(defn priority [c] (cond-> (- (int c) 96) (< (int c) 96) (+ 58)))
+(defn common-item [& rs] (first (apply clojure.set/intersection (map set rs))))
 
 (def part-1-solution
   (->> (parse input)
        (map #(as-> (/ (count %) 2) n
                (list (subs % 0 n) (subs % n))))
-       (map (partial apply common-item-priority))
+       (map (comp priority (partial apply common-item)))
        (reduce +)))
 (def part-2-solution
   (->> (parse input)
        (partition 3)
-       (map (partial apply common-item-priority))
+       (map (comp priority (partial apply common-item)))
        (reduce +)))
